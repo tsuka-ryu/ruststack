@@ -127,6 +127,11 @@ fn parse_interactive() {
 }
 
 fn parse_word(word: &str, vm: &mut Vm) {
+    print!("word: {:?} ,", word);
+    print!("stack: {:?}, ", vm.stack);
+    print!("vars: {:?}, ", vm.vars.len());
+    println!("blocks: {:?}", vm.blocks);
+
     if word.is_empty() {
         return;
     }
@@ -134,6 +139,7 @@ fn parse_word(word: &str, vm: &mut Vm) {
         vm.blocks.push(vec![]);
     } else if word == "}" {
         let top_block = vm.blocks.pop().expect("Block stack underrun!");
+        println!("pop block");
         eval(Value::Block(top_block), vm);
     } else {
         let code = if let Ok(num) = word.parse::<i32>() {
@@ -145,10 +151,12 @@ fn parse_word(word: &str, vm: &mut Vm) {
         };
         eval(code, vm);
     }
+    println!();
 }
 
 fn eval(code: Value, vm: &mut Vm) {
     if let Some(top_block) = vm.blocks.last_mut() {
+        println!("  pushing to block: {:?}", code);
         top_block.push(code);
         return;
     }
@@ -158,16 +166,23 @@ fn eval(code: Value, vm: &mut Vm) {
             .get(op)
             .expect(&format!("{op:?} is not a defined operation"))
             .clone();
+        println!("  eval op: {:?},", op);
         match val {
             Value::Block(block) => {
+                print!("  eval stack: {:?},", vm.stack);
+                println!("  eval block: {:?}", block);
                 for code in block {
                     eval(code, vm);
                 }
             }
-            Value::Native(op) => op.0(vm),
+            Value::Native(op) => {
+                println!("  eval native: {:?}", op);
+                op.0(vm)
+            }
             _ => vm.stack.push(val),
         }
     } else {
+        println!("  eval else, pushing to stack: {:?}", code);
         vm.stack.push(code.clone())
     }
 }

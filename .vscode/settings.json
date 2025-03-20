@@ -1,0 +1,6 @@
+{
+  // 保存時にフォーマットする
+  "editor.formatOnSave": true,
+  // rust-analyzerによるフォーマットの設定
+  "rust-analyzer.checkOnSave.enable": true
+}

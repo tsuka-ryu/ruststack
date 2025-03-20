@@ -1,0 +1,1 @@
+このリポジトリは[ruststack](https://github.com/msakuta/rustack)の写経です

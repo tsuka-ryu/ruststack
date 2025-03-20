@@ -1,0 +1,16 @@
+/factorial { 1 factorial_ini } def
+
+/factorial_ini {
+    /acc exch def
+    /n exch def
+    { n 2 < }
+    { acc }
+    {
+        n 1 -
+        acc n *
+        factorial_ini
+    }
+    if
+} def
+
+10 factorial puts
